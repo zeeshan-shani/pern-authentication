@@ -25,6 +25,28 @@ const registeredUserTable = async (res) => {
   }
 };
 
+// Ensure 'User demographics' table exists
+const userDemographics = async (res) => {
+  try {
+    await pool.query(`
+   CREATE TABLE IF NOT EXISTS "user_demographics" (
+      id SERIAL PRIMARY KEY,
+      age VARCHAR(255) NOT NULL,
+      job VARCHAR(255) NOT NULL,
+      userId INTEGER REFERENCES register_users(id) ON DELETE CASCADE
+    )
+  `);
+    console.log("Table 'userDemographics' created or already exists.");
+
+    // Retrieve data from the database
+
+    // Check if there are any users
+  } catch (error) {
+    console.error("Error creating 'userDemographics' table:", error.message);
+    throw error;
+  }
+};
+
 const loginUserTable = async () => {
   try {
     await pool.query(`
@@ -44,6 +66,7 @@ const loginUserTable = async () => {
 const initializeTables = async () => {
   await registeredUserTable();
   await loginUserTable();
+  await userDemographics();
 };
 initializeTables();
 
@@ -84,6 +107,46 @@ router.post("/register-user", async (req, res, next) => {
   }
 });
 
+// userDemographics Users
+router.post("/user_demographics", async (req, res, next) => {
+  try {
+    const { age, job, userId } = req.body;
+    await userDemographics();
+    const demographics = await pool.query(
+      "INSERT INTO user_demographics (age, job,userId) VALUES($1, $2,$3) RETURNING *",
+      [age, job, userId]
+    );
+
+    // Send a success response with the inserted data
+    res.status(201).json({
+      success: true,
+      message: "User demographics added successfully",
+      data: demographics.rows[0],
+    });
+  } catch (error) {
+    // Send an error response with a generic message
+    res.status(500).json({ error: "Internal Server Error" });
+    next(error);
+  }
+});
+// userDemographics Users
+router.get("/user_demographics", async (req, res, next) => {
+  try {
+    const { age, job, userId } = req.body;
+    await userDemographics();
+    const data = await pool.query("SELECT * FROM user_demographics");
+
+    // Send a success response with the inserted data
+    res.status(201).json({
+      data: data.rows,
+    });
+  } catch (error) {
+    // Send an error response with a generic message
+    res.status(500).json({ error: "Internal Server Error" });
+    next(error);
+  }
+});
+
 // Login Users
 router.post("/login", async (req, res, next) => {
   try {
@@ -92,20 +155,14 @@ router.post("/login", async (req, res, next) => {
       "SELECT * FROM register_users WHERE userExist = $1",
       [loginName]
     );
-    // Compare the entered hashed password with the stored hashed password
     if (loginPassword === userExistQuery.rows[0].password) {
       // Passwords match, generate JWT token
       const token = generateToken(userExistQuery.rows[0].id);
-      res.json({ token });
+      res.json({ token, userId: userExistQuery.rows[0].id });
     } else {
       // Passwords do not match
       res.status(401).json({ error: "Invalid credentials" });
     }
-    // const loginUser = await pool.query(
-    //   "INSERT INTO loginUsers (loginName, loginPassword ) VALUES($1, $2) RETURNING *",
-    //   [loginName, loginPassword]
-    // );
-    // res.json(loginUser.rows[0]);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error Login" });
     next(error);

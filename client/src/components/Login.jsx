@@ -24,9 +24,11 @@ const LoginForm = ({ setIsAuthenticated }) => {
         loginPassword: trimmedPassword,
       });
       // setLogin([...login, response.data]);
-      console.log("Response", response.data.token);
+      console.log("Response", response.data);
       if (response?.data.token) {
         navigate("/userpage");
+        sessionStorage.setItem("jwtToken", response.data.token);
+        sessionStorage.setItem("userId", response.data.userId);
         setIsAuthenticated(true);
         alert("Login successful!");
       } else {

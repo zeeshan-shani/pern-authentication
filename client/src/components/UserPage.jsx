@@ -1,5 +1,5 @@
 import React from "react";
-
+import Form from "./Form";
 const UserPage = () => {
   return (
     <div style={styles.container}>
@@ -17,59 +17,60 @@ const UserPage = () => {
           Explore exciting features and content tailored just for you.
         </p>
       </div>
+      <Form />
     </div>
   );
 };
 
 const styles = {
   container: {
-    textAlign: 'center',
-    padding: '50px',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-    overflow: 'hidden',
+    textAlign: "center",
+    padding: "50px",
+    backgroundColor: "#f5f5f5",
+    borderRadius: "10px",
+    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+    overflow: "hidden",
   },
   header: {
-    marginBottom: '30px',
+    marginBottom: "30px",
   },
   title: {
-    fontSize: '36px',
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: "36px",
+    fontWeight: "bold",
+    color: "#333",
   },
   subtitle: {
-    fontSize: '18px',
-    color: '#555',
+    fontSize: "18px",
+    color: "#555",
   },
   content: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   iconContainer: {
-    backgroundColor: '#4caf50',
-    borderRadius: '50%',
-    padding: '20px',
-    marginBottom: '20px',
-    animation: 'float 2s infinite alternate',
+    backgroundColor: "#4caf50",
+    borderRadius: "50%",
+    padding: "20px",
+    marginBottom: "20px",
+    animation: "float 2s infinite alternate",
   },
   icon: {
-    fontSize: '48px',
-    color: '#fff',
+    fontSize: "48px",
+    color: "#fff",
   },
   message: {
-    fontSize: '16px',
-    color: '#333',
-    marginBottom: '10px',
+    fontSize: "16px",
+    color: "#333",
+    marginBottom: "10px",
   },
   // Animation keyframes
-  '@keyframes float': {
+  "@keyframes float": {
     from: {
-      transform: 'translateY(0)',
+      transform: "translateY(0)",
     },
     to: {
-      transform: 'translateY(-10px)',
+      transform: "translateY(-10px)",
     },
   },
 };

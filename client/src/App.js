@@ -8,6 +8,8 @@ import LandingPage from "./components/LandingPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const retrievedToken = sessionStorage.getItem("jwtToken");
+
 
   return (
     <>
@@ -24,7 +26,7 @@ function App() {
         />
         <Route
           path="/userpage"
-          element={isAuthenticated ? <UserPage /> : <Navigate to="/login" />}
+          element={retrievedToken ? <UserPage /> : <Navigate to="/login" />}
         />
       </Routes>
     </Router>
